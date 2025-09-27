@@ -1,1 +1,100 @@
+/* Reset & basic style */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100%;
+  font-family: 'Georgia', serif;
+}
+
+/* Container with pirate background */
+.container {
+  background-image: url('https://images.unsplash.com/photo-1608373714321-107b2c8c85d3?auto=format&fit=crop&w=1740&q=80');
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+/* Dark overlay */
+.overlay {
+  background-color: rgba(0, 0, 0, 0.6);
+  height: 100%;
+  width: 100%;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Title styling */
+.title {
+  font-size: 3rem;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+/* Subtitle */
+.subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  color: #ccc;
+}
+
+/* Buttons */
+.buttons {
+  display: flex;
+  gap: 20px;
+}
+
+.btn {
+  text-decoration: none;
+  padding: 15px 30px;
+  font-size: 1rem;
+  border: 2px solid white;
+  border-radius: 8px;
+  transition: 0.3s ease;
+}
+
+.play {
+  background-color: #00a86b;
+  color: white;
+}
+
+.play:hover {
+  background-color: #007a4d;
+}
+
+.info {
+  background-color: transparent;
+  color: white;
+}
+
+.info:hover {
+  background-color: white;
+  color: black;
+}
+
+/* Mobile-friendly */
+@media (max-width: 600px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .buttons {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 80%;
+    text-align: center;
+  }
+}
 
