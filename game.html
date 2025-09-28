@@ -1,1 +1,125 @@
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+const keys = {};
+window.addEventListener('keydown', (e) => {
+  keys[e.key] = true;
+});
+window.addEventListener('keyup', (e) => {
+  keys[e.key] = false;
+});
+
+class Entity {
+  constructor(x, y, w, h, color) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+    this.color = color;
+  }
+  draw() {
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.y, this.w, this.h);
+  }
+}
+
+class Player extends Entity {
+  constructor(x, y) {
+    super(x, y, 30, 30, 'green');
+    this.speed = 2;
+    this.onBoat = false;
+  }
+  update() {
+    let sp = this.speed;
+    if (this.onBoat) {
+      sp = this.speed * 1.5; // 1.5 × walking speed
+    }
+    if (keys['w'] || keys['ArrowUp']) this.y -= sp;
+    if (keys['s'] || keys['ArrowDown']) this.y += sp;
+    if (keys['a'] || keys['ArrowLeft']) this.x -= sp;
+    if (keys['d'] || keys['ArrowRight']) this.x += sp;
+    // Boundaries
+    this.x = Math.max(0, Math.min(canvas.width - this.w, this.x));
+    this.y = Math.max(0, Math.min(canvas.height - this.h, this.y));
+  }
+}
+
+class Bullet extends Entity {
+  constructor(x, y, dx, dy) {
+    super(x, y, 5, 5, 'yellow');
+    this.dx = dx;
+    this.dy = dy;
+  }
+  update() {
+    this.x += this.dx;
+    this.y += this.dy;
+  }
+}
+
+class Boat extends Entity {
+  constructor(x, y) {
+    super(x, y, 60, 40, 'brown');
+  }
+  update() {
+    // you can add boat movement logic
+  }
+}
+
+const player = new Player(100, 100);
+const boat = new Boat(200, 200);
+// let’s say if player overlaps boat area, they “board” it:
+function checkBoarding() {
+  if (player.x + player.w > boat.x &&
+      player.x < boat.x + boat.w &&
+      player.y + player.h > boat.y &&
+      player.y < boat.y + boat.h) {
+    player.onBoat = true;
+  } else {
+    player.onBoat = false;
+  }
+}
+
+const bullets = [];
+
+function shoot() {
+  // shoot in direction of facing or mouse (this simple version shoots upward)
+  const b = new Bullet(player.x + player.w / 2, player.y, 0, -5);
+  bullets.push(b);
+}
+
+// listen for space to shoot
+window.addEventListener('keydown', (e) => {
+  if (e.key === ' ') {
+    shoot();
+  }
+});
+
+function update() {
+  player.update();
+  boat.update();
+  checkBoarding();
+  bullets.forEach((b) => b.update());
+  // remove bullets off-screen
+  for (let i = bullets.length - 1; i >= 0; i--) {
+    const b = bullets[i];
+    if (b.x < 0 || b.x > canvas.width || b.y < 0 || b.y > canvas.height) {
+      bullets.splice(i, 1);
+    }
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  boat.draw();
+  player.draw();
+  bullets.forEach((b) => b.draw());
+}
+
+function loop() {
+  update();
+  draw();
+  requestAnimationFrame(loop);
+}
+
+loop();
 
